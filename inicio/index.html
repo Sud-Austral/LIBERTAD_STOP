@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Criminalidad - Maipú (Región Metropolitana) 2024-2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header-top {
+            background-color: #1a3a5f;
+            color: white;
+            padding: 6px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .institution-text {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo-text {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-right: 8px;
+        }
+        .logo {
+            width: 32px;
+            height: 32px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1a3a5f;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .header {
+            background: linear-gradient(90deg, #1a3a5f 0%, #2c5282 100%);
+            color: white;
+            padding: 12px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e53e3e 0%, #38a169 100%);
+        }
+        .content {
+            display: flex;
+            flex: 1;
+            padding: 15px 25px;
+        }
+        .left-section {
+            flex: 1;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #1a3a5f;
+            transition: transform 0.2s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+        .stats-text {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+        }
+        .highlight {
+            color: #1a3a5f;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .table-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-subtitle {
+            font-size: 13px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+            padding: 4px;
+            background-color: rgba(26, 58, 95, 0.08);
+            border-radius: 4px;
+        }
+        .table-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1a3a5f;
+            margin-bottom: 8px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 6px;
+        }
+        .table-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #1a3a5f 0%, #2c5282 100%);
+            border-radius: 2px;
+        }
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th {
+            background-color: #1a3a5f;
+            color: white;
+            text-align: left;
+            padding: 8px 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            position: sticky;
+            top: 0;
+        }
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e6f7ff;
+        }
+        .aumento {
+            color: #d32f2f;
+            font-weight: 500;
+        }
+        .disminucion {
+            color: #388e3c;
+            font-weight: 500;
+        }
+        .situacion {
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .situacion-aumento {
+            color: #d32f2f;
+            background-color: rgba(211, 47, 47, 0.1);
+        }
+        .situacion-disminucion {
+            color: #388e3c;
+            background-color: rgba(56, 142, 60, 0.1);
+        }
+        .icon-indicator {
+            margin-right: 3px;
+            font-size: 10px;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #1a3a5f 0%, #2c5282 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        .summary-title {
+            font-size: 14px;
+            margin-bottom: 6px;
+            opacity: 0.9;
+        }
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .summary-change {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .positive {
+            color: #4ade80;
+        }
+        .negative {
+            color: #f87171;
+        }
+        .region-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .icon-text {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+        .footer {
+            background-color: #1a3a5f;
+            color: white;
+            padding: 8px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+        }
+        .footer-left {
+            display: flex;
+            align-items: center;
+        }
+        .footer-right {
+            display: flex;
+            align-items: center;
+        }
+        .footer-text {
+            margin-right: 15px;
+            opacity: 0.9;
+        }
+        .footer-icon {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header-top">
+            <div class="institution-text">
+                <i class="fas fa-landmark icon-text"></i>Ministerio del Interior y Seguridad Pública
+            </div>
+            <div class="logo-container">
+                <div class="logo-text">Gobierno de Chile</div>
+                <div class="logo">GOB</div>
+            </div>
+        </div>
+        <div class="header">
+            <h1><i class="fas fa-chart-line icon-text"></i>Estadísticas de Criminalidad - Maipú (Región Metropolitana) 2024-2025</h1>
+        </div>
+        <div class="content">
+            <div class="left-section">
+                <div class="summary-box">
+                    <div class="summary-title">Total de casos 2025</div>
+                    <div class="summary-value">2,427</div>
+                    <div class="summary-change positive">
+                        <i class="fas fa-arrow-down icon-text"></i> -20.2% vs 2024
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-text">
+                        <i class="fas fa-info-circle text-blue-600 icon-text"></i>
+                        En <span class="highlight">Maipú (Región Metropolitana)</span> se registraron <span class="highlight">2,427 casos</span> en 2025, <span class="highlight">-20.2%</span> vs 3,041 en 2024.
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-text">
+                        <i class="fas fa-chart-pie text-blue-600 icon-text"></i>
+                        Tendencia general a la baja en la mayoría de categorías, excepto homicidios y violaciones.
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-text">
+                        <i class="fas fa-exclamation-triangle text-blue-600 icon-text"></i>
+                        Mayores disminuciones: robo con intimidación (-52%) y robo violento de vehículo (-54%). Aumentos: homicidios (+100%) y violaciones (+109%).
+                    </div>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="table-container">
+                    <div class="table-subtitle">Frecuencia de Casos Acumulados a la SEMANA 30/2025 (del 21/07/2025 al 27/07/2025)</div>
+                    <div class="table-title">Frecuencia de Delitos Principales 2024-2025 <span class="region-badge">Maipú (Región Metropolitana)</span></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Situación</th>
+                                    <th>Delito</th>
+                                    <th>2024</th>
+                                    <th>2025</th>
+                                    <th>Variación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="situacion situacion-aumento"><i class="fas fa-arrow-up icon-indicator"></i>Aum</span></td>
+                                    <td>HOMICIDIOS</td>
+                                    <td>4</td>
+                                    <td>8</td>
+                                    <td class="aumento">+100%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>HURTOS</td>
+                                    <td>627</td>
+                                    <td>571</td>
+                                    <td class="disminucion">-9%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>LESIONES</td>
+                                    <td>556</td>
+                                    <td>492</td>
+                                    <td class="disminucion">-12%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>OTROS ROBOS CON FUERZA</td>
+                                    <td>36</td>
+                                    <td>23</td>
+                                    <td class="disminucion">-36%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO CON INTIMIDACIÓN</td>
+                                    <td>240</td>
+                                    <td>115</td>
+                                    <td class="disminucion">-52%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO CON VIOLENCIA</td>
+                                    <td>168</td>
+                                    <td>120</td>
+                                    <td class="disminucion">-29%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO DE OBJETO DE O DESDE VEHÍCULO</td>
+                                    <td>613</td>
+                                    <td>356</td>
+                                    <td class="disminucion">-42%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-aumento"><i class="fas fa-arrow-up icon-indicator"></i>Aum</span></td>
+                                    <td>ROBO DE VEHÍCULO</td>
+                                    <td>240</td>
+                                    <td>256</td>
+                                    <td class="aumento">+7%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO EN LUGAR HABITADO</td>
+                                    <td>135</td>
+                                    <td>82</td>
+                                    <td class="disminucion">-39%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO EN LUGAR NO HABITADO</td>
+                                    <td>152</td>
+                                    <td>116</td>
+                                    <td class="disminucion">-24%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO POR SORPRESA</td>
+                                    <td>222</td>
+                                    <td>148</td>
+                                    <td class="disminucion">-33%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-disminucion"><i class="fas fa-arrow-down icon-indicator"></i>Dis</span></td>
+                                    <td>ROBO VIOLENTO DE VEHÍCULO</td>
+                                    <td>37</td>
+                                    <td>17</td>
+                                    <td class="disminucion">-54%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="situacion situacion-aumento"><i class="fas fa-arrow-up icon-indicator"></i>Aum</span></td>
+                                    <td>VIOLACIONES</td>
+                                    <td>11</td>
+                                    <td>23</td>
+                                    <td class="aumento">+109%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-left">
+                <div class="footer-text"><i class="fas fa-globe footer-icon"></i>www.seguridadpublica.gob.cl</div>
+                <div class="footer-text"><i class="fas fa-phone footer-icon"></i>600 600 0000</div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-text">Fecha de elaboración: 28/07/2025</div>
+                <div class="footer-text">Fuente: Sistema STOP</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
